@@ -23,5 +23,14 @@ class DoctrineFixturesExtension extends Extension
 
         $container->registerForAutoconfiguration(ORMFixtureInterface::class)
             ->addTag(FixturesCompilerPass::FIXTURE_TAG);
+
+        $configuration = new Configuration();
+        $config = $this->processConfiguration($configuration, $configs);
+
+        $purgerConfigLoaderDefition = $container->getDefinition('doctrine.fixtures.purger_config_loader');
+
+        foreach ($config['exclude'] as $excludedTable) {
+            $purgerConfigLoaderDefition->addMethodCall('addExcludedTable', $excludedTable);
+        }
     }
 }

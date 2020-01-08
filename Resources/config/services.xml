@@ -13,5 +13,8 @@
         <service id="doctrine.fixtures.loader" class="Doctrine\Bundle\FixturesBundle\Loader\SymfonyFixturesLoader" public="false">
             <argument type="service" id="service_container" />
         </service>
+
+        <service id="doctrine.fixtures.purger_config_loader" class="Doctrine\Bundle\FixturesBundle\Loader\PurgerConfigLoader" public="false">
+        </service>
     </services>
 </container>

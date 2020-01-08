@@ -4,6 +4,7 @@
 namespace Doctrine\Bundle\FixturesBundle\Command;
 
 use Doctrine\Bundle\DoctrineBundle\Command\DoctrineCommand;
+use Doctrine\Bundle\FixturesBundle\Loader\PurgerConfigLoader;
 use Doctrine\Bundle\FixturesBundle\Loader\SymfonyFixturesLoader;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
@@ -25,11 +26,15 @@ class LoadDataFixturesDoctrineCommand extends DoctrineCommand
 {
     private $fixturesLoader;
 
-    public function __construct(SymfonyFixturesLoader $fixturesLoader)
+    /** @var PurgerConfigLoader */
+    private $purgerConfigLoader;
+
+    public function __construct(SymfonyFixturesLoader $fixturesLoader, PurgerConfigLoader $purgerConfigLoader)
     {
         parent::__construct();
 
         $this->fixturesLoader = $fixturesLoader;
+        $this->purgerConfigLoader = $purgerConfigLoader;
     }
 
     protected function configure()
@@ -92,7 +97,7 @@ EOT
 
             return 1;
         }
-        $purger = new ORMPurger($em);
+        $purger = new ORMPurger($em, $this->purgerConfigLoader->getExcludedTables());
         $purger->setPurgeMode($input->getOption('purge-with-truncate') ? ORMPurger::PURGE_MODE_TRUNCATE : ORMPurger::PURGE_MODE_DELETE);
         $executor = new ORMExecutor($em, $purger);
         $executor->setLogger(function ($message) use ($ui) {
