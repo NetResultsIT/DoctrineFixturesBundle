@@ -30,7 +30,7 @@ class DoctrineFixturesExtension extends Extension
         $purgerConfigLoaderDefition = $container->getDefinition('doctrine.fixtures.purger_config_loader');
 
         foreach ($config['exclude'] as $excludedTable) {
-            $purgerConfigLoaderDefition->addMethodCall('addExcludedTable', $excludedTable);
+            $purgerConfigLoaderDefition->addMethodCall('addExcludedTable', [$excludedTable]);
         }
     }
 }
